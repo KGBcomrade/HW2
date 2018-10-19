@@ -7,16 +7,16 @@
     tools:context=".CountActivity">
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="TextView"
+        android:id = "@+id/numbers"/>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Button" />
+        android:text="Start" />
 </LinearLayout>
