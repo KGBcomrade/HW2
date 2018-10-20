@@ -7,11 +7,12 @@
     tools:context=".CountActivity">
 
     <TextView
+        android:id="@+id/numbers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="TextView"
-        android:id = "@+id/numbers"/>
+        android:text="TextView" />
 
     <Button
         android:id="@+id/button_timer"
