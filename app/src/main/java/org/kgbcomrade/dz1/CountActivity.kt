@@ -9,20 +9,23 @@ import android.widget.TextView
 
 class CountActivity : AppCompatActivity() {
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_count)
         val numbers = findViewById<TextView>(R.id.numbers)
         val button = findViewById<Button>(R.id.button_timer)
         var running = false
-        val cdt = object : CountDownTimer(1000000, 1000){
+        val cdt = object : CountDownTimer(999000 , 1000){
             override fun onFinish() {
                 button.text = "Start"
                 running = false
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                numbers.text = ((1000000 - millisUntilFinished)/1000).toString()
+                if(millisUntilFinished != 1000000L)
+                    numbers.text = numToText(((1000000L - millisUntilFinished)/1000L).toInt())
             }
 
         }
