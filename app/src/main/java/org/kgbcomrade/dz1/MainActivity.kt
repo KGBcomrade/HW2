@@ -1,12 +1,15 @@
 package org.kgbcomrade.dz1
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.widget.Toast
+import android.os.PersistableBundle
+import android.support.v7.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var cdt : CountDownTimer
+    var time = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -14,7 +17,9 @@ class MainActivity : AppCompatActivity() {
 
         val ci = Intent(this, CountActivity::class.java)
 
-        object : CountDownTimer(2000, 1000) {
+        if (savedInstanceState != null) time = savedInstanceState.getInt("TIME").toLong()
+
+        cdt = object : CountDownTimer(2000 - time, 1000) {
 
             override fun onFinish() {
                 startActivity(ci)
@@ -22,9 +27,21 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-
+                time = 2000L - millisUntilFinished
             }
         }.start()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cdt.cancel()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        outState?.putInt("TIME", time.toInt())
+        super.onSaveInstanceState(outState, outPersistentState)
+
     }
 
 }

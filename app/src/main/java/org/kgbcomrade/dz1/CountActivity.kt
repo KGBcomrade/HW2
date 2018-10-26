@@ -1,9 +1,9 @@
 package org.kgbcomrade.dz1
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.View
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 
@@ -11,6 +11,7 @@ class CountActivity : AppCompatActivity() {
 
     var running = false
     var time : Int = 0
+    lateinit var cdt : CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +27,7 @@ class CountActivity : AppCompatActivity() {
         button.text = if(running) "Stop" else "Start"
         numbers.text = if(time == 0) "" else numToText(time)
 
-        val cdt = object : CountDownTimer(999000 - time * 1000L, 1000){
+        cdt = object : CountDownTimer(999000 - time * 1000L, 1000){
             override fun onFinish() {
                 button.text = "Start"
                 running = false
@@ -35,31 +36,50 @@ class CountActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 time = ((1000000L - millisUntilFinished)/1000L).toInt()
                 numbers.text = numToText(time)
+                Log.i("La logue", "(${hashCode()}): time: $time")
             }
 
         }
 
+
+
         if(running)
             cdt.start()
 
-        button.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(v: View?) {
-                if(!running)
-                    cdt.start()
-                else
-                    cdt.cancel()
-                button.text = (if (running) "Start" else "Stop")
-                running = !running
-            }
+        button.setOnClickListener {
+            if(!running)
+                cdt.start()
+            else {
+                cdt.cancel()
+                cdt = object : CountDownTimer(999000, 1000){
+                    override fun onFinish() {
+                        button.text = "Start"
+                        running = false
+                    }
 
-        })
+                    override fun onTick(millisUntilFinished: Long) {
+                        time = ((1000000L - millisUntilFinished)/1000L).toInt()
+                        numbers.text = numToText(time)
+                        Log.i("La logue", "(${hashCode()}): time: $time")
+                    }
+
+                }
+            }
+            button.text = (if (running) "Start" else "Stop")
+            running = !running
+        }
 
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        cdt.cancel()
+    }
+
     override fun onSaveInstanceState(outState: Bundle?) {
-        outState!!.putInt("TIME", time)
-        outState.putBoolean("RUNNING", running)
+        outState?.putInt("TIME", time)
+        outState?.putBoolean("RUNNING", running)
         super.onSaveInstanceState(outState)
     }
 }
